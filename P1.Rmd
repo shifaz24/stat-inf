@@ -1,0 +1,80 @@
+---
+title: "SI PART 1"
+author: "SHASHANK VIKRAM SINGH"
+date: "22/10/2021"
+output:
+  
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tinytex)
+
+set.seed(2018)
+lambda <- 0.2
+n <- 40
+sim_data <- replicate(1000, rexp(n, lambda))
+mean_sim_data <- apply(sim_data, 2, mean)
+```
+Mean Comparision
+Sample Mean vs Theoretical Mean of the Distribution
+
+```{r}
+
+sampleMean <- mean(mean_sim_data) # Mean of sample means
+print (paste("Sample Mean = ", sampleMean))
+
+
+theoretical_mean <- (1/lambda)
+print (paste("Theoretical Mean = ", theoretical_mean))
+```
+```{r}
+
+hist(mean_sim_data, col="red", xlab = "Mean Average", main="Distribution of Exponential Average")
+abline(v = theoretical_mean, col="yellow")
+abline(v = sampleMean, col="green")
+```
+Question 2: Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution
+
+
+```{r}
+
+sample_dev <- sd(mean_sim_data)
+sample_dev
+
+sample_variance <- sample_dev^2
+sample_variance
+```
+
+```{r}
+
+theoretical_dev <- (1/lambda)/sqrt(n)
+theoretical_dev
+theoretical_variance <- ((1/lambda)*(1/sqrt(n)))^2
+theoretical_variance
+```
+Question 3: Show that the distribution is approximately normal
+Histogram with Density and sample means:
+```{r}
+d <- data.frame(mean_sim_data)
+t <- data.frame(theoretical_mean)
+g <- ggplot(d, aes(x = mean_sim_data)) +
+
+ geom_histogram(binwidth = .2, color="black", fill="red" , aes(y=..density..))+
+            stat_function(fun=dnorm, args=list(mean=theoretical_mean, sd=sd(mean_sim_data)), 
+                          color="green", size =1) +
+            stat_density(geom = "line", color = "blue", size =1)  +
+            labs(x="Mean", y= "Density", 
+                    title="Normal Distribution Comparision")
+g
+```
+
+
+Q-Q Normal Plot also indicates the normal distribution
+```{r}
+qqnorm(mean_sim_data)
+ qqline(mean_sim_data, col = "green")
+```

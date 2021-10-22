@@ -1,0 +1,71 @@
+---
+title: "SI PROJECT 2"
+author: "SHASHANK VIKRAM SINGH"
+date: "22/10/2021"
+output:
+ 
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Overview
+The project aim is to analyze the ToothGrowth data in the R datasets package.
+
+Load the necessary packages
+```{r}
+library(ggplot2)
+library(tinytex)
+library(datasets)
+```
+
+1. Load the ToothGrowth data 
+```{r}
+data(ToothGrowth)
+str(ToothGrowth)
+
+```
+Summary of the data
+```{r}
+summary(ToothGrowth)
+```
+2.Basic summary of the data
+```{r}
+Supplement_mean = split(ToothGrowth$len, ToothGrowth$supp)
+sapply(Supplement_mean, mean)
+```
+Graph
+```{r}
+ggplot(aes(x=supp, y=len), data=ToothGrowth) + geom_boxplot(aes(fill=supp))+ 
+        xlab("Supplement Type") +ylab("Tooth length") 
+```
+3.  compare growth of tooth by supplement dose
+```{r}
+unique(ToothGrowth$dose)
+```
+There are 3 dose groups: 0.5, 1, and 2
+ Tooth length vs Dose
+```{r}
+g <- ggplot(aes(x = factor(dose), y = len), data = ToothGrowth) + 
+    geom_boxplot(aes(fill = factor(dose)))
+g <- g + labs(title="Tooth Lenghtvs dosage")
+print(g)
+```
+T-test for dose 0.5 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == .5, ])
+```
+T-test for dose 1 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 1, ])
+```
+T-test for dose 2 mg:
+```{r}
+t.test(len ~ supp, ToothGrowth[ToothGrowth$dose == 2, ])
+```
+
+Due to small P value we can reject null hypothesis and conclude that supliment has no effect on teath growth.
+
+
+
